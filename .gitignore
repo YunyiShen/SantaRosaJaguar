@@ -1,0 +1,6 @@
+.Rhistory
+data/*
+*.doc
+*.docx
+*.rds
+*.rda
