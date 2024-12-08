@@ -110,8 +110,10 @@ generated quantities {
                     bkw[2] = log1msurviveprob[i];
                     bkw[3] = 0;
                 }
+                bkw[1] += log_p_not_recruited[i, t+1];
+                bkw[2] += log_p_alive[i, t+1];
+                bkw[3] += log_p_dead[i, t+1];
                 z[i,t] = categorical_rng(softmax(bkw));
-            
             }
 
         }

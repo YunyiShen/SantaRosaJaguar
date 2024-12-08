@@ -52,20 +52,21 @@ NN_mean <- aggregate(value~variable + sex, data = NN, FUN = median)
 
 total_N_mean <- aggregate(value~variable, data = total_N, FUN = median)
 
-jpeg("./res/Figs/size.jpg", width = 6, height = 3, units = "in",res = 500)
-ggplot(NN, aes(x = variable, y = value, pattern = sex)) + 
-  geom_boxplot_pattern(pattern_density = 0.7, # Adjust density of the pattern
-                       pattern_angle = 45, 
-                       pattern_size = .05,
-                       pattern_scale = 0.1,
-                       outlier.size = .5) + 
-  scale_pattern_manual(values = c("stripe", "circle")) + #
-  #geom_boxplot() +
+jpeg("./res/Figs/size.jpg", width = 10, height = 3, units = "in",res = 500)
+ggplot(NN, aes(x = variable, y = value))+#, pattern = sex, fill = sex)) + 
+  #geom_boxplot_pattern(pattern_density = 0.7, # Adjust density of the pattern
+  #                     pattern_angle = 45, 
+  #                     pattern_size = .05,
+  #                     pattern_scale = 0.1,
+  #                     outlier.size = .5) + 
+  #scale_pattern_manual(values = c("stripe", "circle")) + #
+  geom_boxplot() +
   theme_classic() + 
   xlab("") + 
   ylab("# individuals") + 
   geom_line(aes(group = sex),data = NN_mean) + 
-  theme(legend.position = "top")
+  facet_wrap(~sex)
+  #theme(legend.position = "top")
 dev.off()
 
 
@@ -75,7 +76,8 @@ ggplot(total_N, aes(x = variable, y = value)) +
   #geom_boxplot() +
   theme_classic() + 
   xlab("") + 
-  ylab("# individuals") 
+  ylab("# individuals") + 
+  ylim(0,35)
 dev.off()
 
 ### vital rates ###
@@ -84,24 +86,24 @@ params = extract(m_fit, c("psi", "phi", "gamma", "p"))
 jpeg("./res/Figs/vital_rates.jpg", width = 6, height = 3, units = "in",res = 500)
 
 par(mfcol = c(2,4),mar = c(2.5,2.5,1.7,.5), mgp = c(1.5, 0.5, 0))
-plot(density(params$psi[,1]*50), main = "Initial recruitment", xlab = "", ylab = "Female")
+plot(density(params$psi[,1]*50), main = "Initial recruitment", xlab = "", ylab = "Female", xlim = c(0,9))
 polygon(density(params$psi[,1]*50), col = "#9b9b9b")
-plot(density(params$psi[,2]*50), main = "", xlab = "", ylab = "Male")
+plot(density(params$psi[,2]*50), main = "", xlab = "", ylab = "Male", xlim = c(0,9))
 polygon(density(params$psi[,2]*50), col = "#9b9b9b")
 
-plot(density(params$gamma[,1]*50), main = "Recruitment", xlab = "", ylab = "")
+plot(density(params$gamma[,1]*50), main = "Recruitment", xlab = "", ylab = "", xlim = c(0,5))
 polygon(density(params$gamma[,1]*50), col = "#9b9b9b")
-plot(density(params$gamma[,2]*50), main = "", xlab = "", ylab = "")
+plot(density(params$gamma[,2]*50), main = "", xlab = "", ylab = "", xlim = c(0,5))
 polygon(density(params$gamma[,2]*50), col = "#9b9b9b")
 
-plot(density(params$phi[,1]), main = "Survival", xlab = "", ylab = "")
+plot(density(params$phi[,1]), main = "Survival", xlab = "", ylab = "", xlim = c(0.75,1))
 polygon(density(params$phi[,1]), col = "#9b9b9b")
-plot(density(params$phi[,2]), main = "", xlab = "", ylab = "")
+plot(density(params$phi[,2]), main = "", xlab = "", ylab = "", xlim = c(0.75,1))
 polygon(density(params$phi[,2]), col = "#9b9b9b")
 
-plot(density(params$p[,1]), main = "Detection", xlab = "", ylab = "")
+plot(density(params$p[,1]), main = "Detection", xlab = "", ylab = "", xlim = c(0.5,1))
 polygon(density(params$p[,1]), col = "#9b9b9b")
-plot(density(params$p[,2]), main = "", xlab = "", ylab = "")
+plot(density(params$p[,2]), main = "", xlab = "", ylab = "", xlim = c(0.5,1))
 polygon(density(params$p[,2]), col = "#9b9b9b")
 
 dev.off()
